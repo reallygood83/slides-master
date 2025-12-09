@@ -1,0 +1,36 @@
+# Obsidian
+data.json
+.obsidian/
+
+# Node
+node_modules
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Compiled
+main.js
+main.js.map
+*.js.map
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build
+build/
+.cache/
+
+# TypeScript
+*.tsbuildinfo
