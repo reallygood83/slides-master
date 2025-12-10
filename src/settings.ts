@@ -38,6 +38,7 @@ export class SlidesMasterSettingTab extends PluginSettingTab {
         .onChange(async (value: AIProvider) => {
           this.plugin.settings.promptProvider = value;
           await this.plugin.saveSettings();
+          this.plugin.initializeServices(); // Re-initialize services with new provider
           this.display(); // Refresh to show relevant settings
         })
       );
@@ -54,6 +55,7 @@ export class SlidesMasterSettingTab extends PluginSettingTab {
         .onChange(async (value: AIProvider) => {
           this.plugin.settings.imageGenerationProvider = value;
           await this.plugin.saveSettings();
+          this.plugin.initializeServices(); // Re-initialize services with new provider
           this.display(); // Refresh to show relevant settings
         })
       );

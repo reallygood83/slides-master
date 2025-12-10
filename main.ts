@@ -326,9 +326,10 @@ export default class Paper2SlidesPlugin extends Plugin {
   }
 
   /**
-   * Initialize all service instances
+   * Initialize all service instances with current settings
+   * Called on plugin load and when AI provider settings change
    */
-  private initializeServices(): void {
+  initializeServices(): void {
     this.markdownParser = new MarkdownParser();
     this.ragService = new RAGService();
     this.summaryService = new SummaryService(this.settings);
