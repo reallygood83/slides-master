@@ -5,6 +5,30 @@ All notable changes to the Slides Master Obsidian Plugin will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.6] - 2024-12-10
+
+### Added
+- **Multilingual Support**: Slides are now generated in the user's preferred language (English or Korean)
+- AI prompts now respect the `preferredLanguage` setting (en/ko) from plugin settings
+- Added comprehensive i18n (internationalization) utility module for language-specific prompts
+- Language-specific instructions are injected into both Summary and Plan stages of slide generation
+
+### Technical Details
+- Created `src/utils/i18n.ts` with language-specific prompt functions:
+  - `getLanguageInstruction()`: Basic language instruction for AI
+  - `getAnalysisLanguagePrompt()`: Language-specific prompts for content analysis
+  - `getBlueprintLanguagePrompt()`: Language-specific prompts for slide blueprint generation
+  - `getExampleStructure()`: Localized example text for prompts
+- Modified `SummaryService.ts` to inject language instructions into analysis prompts
+- Modified `PlanService.ts` to inject language instructions into blueprint generation prompts
+- All slide titles, content, and speaker notes are now generated in the selected language
+
+### Changed
+- Both `SummaryService` and `PlanService` now store settings reference to access `preferredLanguage`
+- AI prompts include explicit language requirements and localized examples
+- Korean users will now see all slide content (제목, 내용, 노트) in Korean
+- English users continue to see all slide content in English
+
 ## [1.0.5] - 2024-12-10
 
 ### Fixed

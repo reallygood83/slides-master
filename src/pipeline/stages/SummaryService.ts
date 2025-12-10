@@ -8,6 +8,7 @@ import {
 } from '../../types';
 import { AIProviderFactory } from '../../services';
 import { AIProviderService } from '../../services/AIProviderService';
+import { getAnalysisLanguagePrompt, getExampleStructure } from '../../utils/i18n';
 
 /**
  * Summary Service (Stage 2)
@@ -15,8 +16,10 @@ import { AIProviderService } from '../../services/AIProviderService';
  */
 export class SummaryService implements ISummaryService {
   private aiProvider: AIProviderService;
+  private settings: Paper2SlidesSettings;
 
   constructor(settings: Paper2SlidesSettings) {
+    this.settings = settings;
     // Use prompt provider for text analysis
     this.aiProvider = AIProviderFactory.createPromptProvider(settings);
   }
@@ -65,8 +68,13 @@ export class SummaryService implements ISummaryService {
    * Build AI analysis prompt
    */
   private buildAnalysisPrompt(content: string, chunkCount: number): string {
+    const languagePrompt = getAnalysisLanguagePrompt(this.settings.preferredLanguage);
+    const exampleStructure = getExampleStructure(this.settings.preferredLanguage);
+
     return `
 Analyze the following document content and provide a comprehensive summary for creating presentation slides.
+
+${languagePrompt}
 
 **Document Content (${chunkCount} sections):**
 ${content.substring(0, 15000)} ${content.length > 15000 ? '\n\n[Content truncated...]' : ''}
@@ -76,22 +84,22 @@ ${content.substring(0, 15000)} ${content.length > 15000 ? '\n\n[Content truncate
 Provide your analysis in the following JSON format:
 
 {
-  "mainTopics": ["topic1", "topic2", "topic3"],
-  "keyPoints": ["point1", "point2", "point3", "point4", "point5"],
+  "mainTopics": ["${exampleStructure.title}", "${exampleStructure.subtitle}", "..."],
+  "keyPoints": ["${exampleStructure.bulletPoint}", "...", "..."],
   "suggestedSlideCount": 12,
   "estimatedDuration": 15,
   "complexity": "intermediate",
   "keywords": ["keyword1", "keyword2", "keyword3"],
   "outline": [
     {
-      "title": "Introduction",
+      "title": "${exampleStructure.title}",
       "level": 1,
-      "content": "Overview of the topic",
+      "content": "${exampleStructure.notes}",
       "subsections": [
         {
-          "title": "Background",
+          "title": "${exampleStructure.subtitle}",
           "level": 2,
-          "content": "Historical context"
+          "content": "${exampleStructure.notes}"
         }
       ]
     }

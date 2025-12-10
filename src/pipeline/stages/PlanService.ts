@@ -9,6 +9,7 @@ import {
 } from '../../types';
 import { AIProviderFactory } from '../../services';
 import { AIProviderService } from '../../services/AIProviderService';
+import { getBlueprintLanguagePrompt, getExampleStructure } from '../../utils/i18n';
 
 /**
  * Plan Service (Stage 3)
@@ -16,8 +17,10 @@ import { AIProviderService } from '../../services/AIProviderService';
  */
 export class PlanService implements IPlanService {
   private aiProvider: AIProviderService;
+  private settings: Paper2SlidesSettings;
 
   constructor(settings: Paper2SlidesSettings) {
+    this.settings = settings;
     this.aiProvider = AIProviderFactory.createPromptProvider(settings);
   }
 
@@ -104,8 +107,13 @@ export class PlanService implements IPlanService {
     targetCount: number,
     config: PipelineConfig
   ): string {
+    const languagePrompt = getBlueprintLanguagePrompt(this.settings.preferredLanguage);
+    const exampleStructure = getExampleStructure(this.settings.preferredLanguage);
+
     return `
 Create a detailed presentation blueprint with ${targetCount} slides based on the following content summary.
+
+${languagePrompt}
 
 **Content Summary:**
 - Main Topics: ${summary.mainTopics.join(', ')}
@@ -128,23 +136,23 @@ Provide a JSON array of slide blueprints. Each blueprint should have:
 [
   {
     "slideNumber": 1,
-    "title": "Presentation Title",
+    "title": "${exampleStructure.title}",
     "layout": "title",
     "content": {
-      "text": ["Subtitle or tagline", "Author/Date info"]
+      "text": ["${exampleStructure.subtitle}", "${exampleStructure.notes}"]
     },
-    "notes": "Opening slide to introduce the topic",
+    "notes": "${exampleStructure.notes}",
     "imagePrompt": "A professional hero image representing...",
     "estimatedTokens": 150
   },
   {
     "slideNumber": 2,
-    "title": "Section Title",
+    "title": "${exampleStructure.title}",
     "layout": "content",
     "content": {
-      "text": ["Bullet point 1", "Bullet point 2", "Bullet point 3"]
+      "text": ["${exampleStructure.bulletPoint}", "${exampleStructure.bulletPoint}", "${exampleStructure.bulletPoint}"]
     },
-    "notes": "Explain the main concept",
+    "notes": "${exampleStructure.notes}",
     "imagePrompt": "An illustration showing...",
     "estimatedTokens": 200
   }

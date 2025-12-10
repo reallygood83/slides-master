@@ -1,7 +1,7 @@
 {
   "id": "slides-master",
   "name": "Slides Master - AI Presentation Generator",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "minAppVersion": "0.15.0",
   "description": "Transform your markdown notes into professional presentation slides using AI. Supports multiple themes, resolutions, and export formats (HTML/PDF/PPTX).",
   "author": "김문정 (Kim Moon-Jung)",
