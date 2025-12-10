@@ -5,6 +5,18 @@ All notable changes to the Slides Master Obsidian Plugin will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2024-12-10
+
+### Fixed
+- **Critical Bug Fix**: Fixed 401 authentication errors with Grok API
+- Services now properly re-initialize when AI provider settings (API keys, base URLs, models) are changed
+- All AI providers (Gemini, Grok, OpenAI) now correctly update their authentication credentials without requiring plugin reload
+
+### Technical Details
+- Added `initializeServices()` call after each AI provider setting change
+- This ensures service instances are recreated with updated API credentials
+- Previously, services were only initialized once during plugin load, causing them to retain old/empty API keys even after user configuration
+
 ## [1.0.3] - 2024-12-10
 
 ### Changed

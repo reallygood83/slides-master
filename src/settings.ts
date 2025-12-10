@@ -74,6 +74,8 @@ export class SlidesMasterSettingTab extends PluginSettingTab {
         .onChange(async (value) => {
           this.plugin.settings.gemini.apiKey = value;
           await this.plugin.saveSettings();
+          // Re-initialize services with new API key
+          this.plugin.initializeServices();
         })
       );
 
@@ -86,6 +88,8 @@ export class SlidesMasterSettingTab extends PluginSettingTab {
         .onChange(async (value) => {
           this.plugin.settings.gemini.baseUrl = value;
           await this.plugin.saveSettings();
+          // Re-initialize services with new base URL
+          this.plugin.initializeServices();
         })
       );
 
@@ -109,6 +113,8 @@ export class SlidesMasterSettingTab extends PluginSettingTab {
         .onChange(async (value: 'gemini-2.0-flash' | 'gemini-2.5-flash' | 'gemini-3-pro') => {
           this.plugin.settings.gemini.textModel = value;
           await this.plugin.saveSettings();
+          // Re-initialize services with new model
+          this.plugin.initializeServices();
         })
       );
 
@@ -126,6 +132,8 @@ export class SlidesMasterSettingTab extends PluginSettingTab {
         .onChange(async (value) => {
           this.plugin.settings.grok.apiKey = value;
           await this.plugin.saveSettings();
+          // Re-initialize services with new API key
+          this.plugin.initializeServices();
         })
       );
 
@@ -138,6 +146,8 @@ export class SlidesMasterSettingTab extends PluginSettingTab {
         .onChange(async (value) => {
           this.plugin.settings.grok.baseUrl = value;
           await this.plugin.saveSettings();
+          // Re-initialize services with new base URL
+          this.plugin.initializeServices();
         })
       );
 
@@ -150,6 +160,8 @@ export class SlidesMasterSettingTab extends PluginSettingTab {
         .onChange(async (value) => {
           this.plugin.settings.grok.model = value;
           await this.plugin.saveSettings();
+          // Re-initialize services with new model
+          this.plugin.initializeServices();
         })
       );
 
@@ -167,6 +179,8 @@ export class SlidesMasterSettingTab extends PluginSettingTab {
         .onChange(async (value) => {
           this.plugin.settings.openai.apiKey = value;
           await this.plugin.saveSettings();
+          // Re-initialize services with new API key
+          this.plugin.initializeServices();
         })
       );
 
@@ -179,6 +193,8 @@ export class SlidesMasterSettingTab extends PluginSettingTab {
         .onChange(async (value) => {
           this.plugin.settings.openai.baseUrl = value;
           await this.plugin.saveSettings();
+          // Re-initialize services with new base URL
+          this.plugin.initializeServices();
         })
       );
 
@@ -191,6 +207,8 @@ export class SlidesMasterSettingTab extends PluginSettingTab {
         .onChange(async (value) => {
           this.plugin.settings.openai.model = value;
           await this.plugin.saveSettings();
+          // Re-initialize services with new model
+          this.plugin.initializeServices();
         })
       );
 
