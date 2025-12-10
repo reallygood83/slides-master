@@ -112,15 +112,44 @@ export class GeminiService extends AIProviderService {
 
   async generateImage(request: ImageGenerationRequest): Promise<ImageGenerationResponse> {
     try {
-      // Gemini's Imagen API for image generation
+      // Determine aspect ratio from width/height
+      const width = request.width || 1280;
+      const height = request.height || 720;
+      const ratio = width / height;
+
+      // Map to closest Gemini aspect ratio
+      let aspectRatio = '16:9';
+      if (Math.abs(ratio - 1) < 0.1) aspectRatio = '1:1';
+      else if (Math.abs(ratio - 4/3) < 0.1) aspectRatio = '4:3';
+      else if (Math.abs(ratio - 3/4) < 0.1) aspectRatio = '3:4';
+      else if (Math.abs(ratio - 16/9) < 0.1) aspectRatio = '16:9';
+      else if (Math.abs(ratio - 9/16) < 0.1) aspectRatio = '9:16';
+
+      // Determine resolution tier
+      let imageSize = '1K';
+      if (width >= 3840) imageSize = '4K';
+      else if (width >= 2560) imageSize = '2K';
+      else imageSize = '1K';
+
+      // Gemini's native image generation API structure
       const requestBody = {
-        prompt: request.prompt,
-        n: 1,
-        size: `${request.width || 1280}x${request.height || 720}`,
+        contents: [{
+          role: 'user',
+          parts: [{
+            text: request.prompt
+          }]
+        }],
+        generationConfig: {
+          responseModalities: ['IMAGE'],
+          imageConfig: {
+            aspectRatio: aspectRatio,
+            imageSize: imageSize
+          }
+        }
       };
 
       const response = await requestUrl({
-        url: `${this.baseUrl}/models/${this.imageModel}:generateImages?key=${this.apiKey}`,
+        url: `${this.baseUrl}/models/${this.imageModel}:generateContent?key=${this.apiKey}`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -130,18 +159,25 @@ export class GeminiService extends AIProviderService {
 
       const data = response.json;
 
-      if (!data.images || data.images.length === 0) {
-        throw new Error('No image generated from Gemini');
+      // Extract image from response
+      if (!data.candidates || data.candidates.length === 0) {
+        throw new Error('No candidates in Gemini response');
       }
 
-      // TODO: Convert imageUrl to base64 imageData
-      const imageUrl = data.images[0].imageUri || data.images[0].image;
+      const parts = data.candidates[0].content?.parts;
+      if (!parts || parts.length === 0) {
+        throw new Error('No parts in Gemini response');
+      }
+
+      // Find the image part
+      const imagePart = parts.find((part: any) => part.inlineData);
+      if (!imagePart || !imagePart.inlineData) {
+        throw new Error('No image data in Gemini response');
+      }
 
       return {
-        imageData: '', // TODO: Fetch URL and convert to base64
-        mimeType: 'image/png',
-        imageUrl,
-        revisedPrompt: data.images[0].safetyRatings ? undefined : request.prompt,
+        imageData: imagePart.inlineData.data, // Already base64 encoded
+        mimeType: imagePart.inlineData.mimeType || 'image/png',
       };
     } catch (error) {
       console.error('Gemini image generation error:', error);

@@ -167,6 +167,7 @@ export default class Paper2SlidesPlugin extends Plugin {
         theme: quickOptions.theme,
         resolution: quickOptions.resolution,
         parallelWorkers: this.settings.parallelWorkers,
+        embedInNote: quickOptions.embedInNote,
       };
 
       // Execute pipeline with timing
@@ -264,6 +265,7 @@ export default class Paper2SlidesPlugin extends Plugin {
         resolution: this.settings.defaultResolution,
         length: this.settings.defaultSlideLength,
         mode: this.settings.defaultPipelineMode,
+        embedInNote: this.settings.embedSlidesInNote,
       };
     }
 
@@ -444,7 +446,7 @@ export default class Paper2SlidesPlugin extends Plugin {
       const outputConfig: OutputConfig = {
         format: this.settings.defaultOutputFormat,
         fileName: `${this.lastGeneratedFile?.basename || 'slides'}_slides`,
-        embedInNote: this.settings.embedSlidesInNote,
+        embedInNote: config.embedInNote ?? this.settings.embedSlidesInNote,
         openAfterGeneration: this.settings.openAfterGeneration,
       };
 

@@ -144,6 +144,7 @@ export interface PipelineConfig {
   length: SlideLength;
   theme: ThemeType;
   resolution: ResolutionType;
+  embedInNote?: boolean;
 }
 
 // ============================================================================
@@ -380,6 +381,7 @@ export interface QuickOptionsResult {
   resolution: ResolutionType;
   length: SlideLength;
   mode: PipelineMode;
+  embedInNote?: boolean;
 }
 
 export interface PreviewModalResult {

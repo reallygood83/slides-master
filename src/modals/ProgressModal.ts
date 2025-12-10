@@ -27,6 +27,10 @@ export class ProgressModal extends Modal {
   onOpen() {
     const { contentEl } = this;
 
+    // Add debugging - make sure content is visible
+    contentEl.style.minHeight = '300px';
+    contentEl.style.padding = '20px';
+
     contentEl.createEl('h2', { text: 'Generating Slides' });
 
     // Stage indicator
@@ -172,21 +176,21 @@ export class ProgressModal extends Modal {
         gap: 5px;
         padding: 10px;
         border-radius: 8px;
-        background-color: var(--background-secondary);
+        background-color: var(--background-secondary, #e0e0e0);
         opacity: 0.5;
         transition: all 0.3s;
       }
 
       .stage-item.stage-active {
         opacity: 1;
-        background-color: var(--interactive-accent);
-        color: var(--text-on-accent);
+        background-color: var(--interactive-accent, #5865f2);
+        color: var(--text-on-accent, #ffffff);
         transform: scale(1.1);
       }
 
       .stage-item.stage-completed {
         opacity: 0.7;
-        background-color: var(--background-modifier-success);
+        background-color: var(--background-modifier-success, #a0e0a0);
       }
 
       .stage-emoji {
@@ -205,7 +209,7 @@ export class ProgressModal extends Modal {
       .progress-bar-bg {
         width: 100%;
         height: 24px;
-        background-color: var(--background-secondary);
+        background-color: var(--background-secondary, #e0e0e0);
         border-radius: 12px;
         overflow: hidden;
       }
@@ -214,8 +218,8 @@ export class ProgressModal extends Modal {
         height: 100%;
         background: linear-gradient(
           90deg,
-          var(--interactive-accent) 0%,
-          var(--interactive-accent-hover) 100%
+          var(--interactive-accent, #5865f2) 0%,
+          var(--interactive-accent-hover, #4752c4) 100%
         );
         border-radius: 12px;
         transition: width 0.3s ease;
@@ -234,28 +238,28 @@ export class ProgressModal extends Modal {
         font-size: 18px;
         font-weight: 600;
         margin-top: 10px;
-        color: var(--text-normal);
+        color: var(--text-normal, #000000);
       }
 
       .progress-message {
         text-align: center;
         margin: 15px 0;
         font-size: 14px;
-        color: var(--text-muted);
+        color: var(--text-muted, #666666);
         min-height: 20px;
       }
 
       .progress-slide-counter {
         text-align: center;
         font-size: 13px;
-        color: var(--text-muted);
+        color: var(--text-muted, #666666);
         margin-top: 10px;
       }
 
       .progress-time-remaining {
         text-align: center;
         font-size: 13px;
-        color: var(--text-muted);
+        color: var(--text-muted, #666666);
         margin-top: 5px;
       }
     `;

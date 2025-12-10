@@ -33,6 +33,7 @@ export class QuickOptionsModal extends Modal {
       resolution: settings.defaultResolution,
       length: settings.defaultSlideLength,
       mode: settings.defaultPipelineMode,
+      embedInNote: settings.embedSlidesInNote,
     };
   }
 
@@ -103,6 +104,18 @@ export class QuickOptionsModal extends Modal {
           .setValue(this.result.mode)
           .onChange((value) => {
             this.result.mode = value as PipelineMode;
+          })
+      );
+
+    // Embed in Note Toggle
+    new Setting(contentEl)
+      .setName('Embed in Note')
+      .setDesc('Automatically embed generated slides in the current note')
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.result.embedInNote ?? false)
+          .onChange((value) => {
+            this.result.embedInNote = value;
           })
       );
 
