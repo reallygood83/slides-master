@@ -34,6 +34,7 @@ export class QuickOptionsModal extends Modal {
       length: settings.defaultSlideLength,
       mode: settings.defaultPipelineMode,
       embedInNote: settings.embedSlidesInNote,
+      language: settings.preferredLanguage,
     };
   }
 
@@ -116,6 +117,20 @@ export class QuickOptionsModal extends Modal {
           .setValue(this.result.embedInNote ?? false)
           .onChange((value) => {
             this.result.embedInNote = value;
+          })
+      );
+
+    // Language Selection
+    new Setting(contentEl)
+      .setName('Language')
+      .setDesc('Choose the language for generated slide content')
+      .addDropdown((dropdown) =>
+        dropdown
+          .addOption('ko', '🇰🇷 한국어 (Korean)')
+          .addOption('en', '🇺🇸 English')
+          .setValue(this.result.language ?? 'ko')
+          .onChange((value) => {
+            this.result.language = value as 'ko' | 'en';
           })
       );
 

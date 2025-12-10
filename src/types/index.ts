@@ -382,6 +382,7 @@ export interface QuickOptionsResult {
   length: SlideLength;
   mode: PipelineMode;
   embedInNote?: boolean;
+  language?: 'ko' | 'en';
 }
 
 export interface PreviewModalResult {

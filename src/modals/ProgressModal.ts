@@ -25,54 +25,95 @@ export class ProgressModal extends Modal {
   }
 
   onOpen() {
-    const { contentEl } = this;
+    const { contentEl, modalEl } = this;
 
-    // v1.0.5 FIX: Extremely explicit styling to ensure visibility across all themes
+    // v1.0.7 FIX: Style both modalEl and contentEl for proper visibility
+    // Modal container styling
+    modalEl.style.display = 'flex';
+    modalEl.style.alignItems = 'center';
+    modalEl.style.justifyContent = 'center';
+    modalEl.style.position = 'fixed';
+    modalEl.style.top = '0';
+    modalEl.style.left = '0';
+    modalEl.style.right = '0';
+    modalEl.style.bottom = '0';
+    modalEl.style.zIndex = '100';
+    modalEl.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+
+    // Content area styling - make it clearly visible
+    contentEl.style.minWidth = '600px';
     contentEl.style.minHeight = '400px';
-    contentEl.style.padding = '30px';
+    contentEl.style.maxWidth = '90vw';
+    contentEl.style.padding = '40px';
     contentEl.style.backgroundColor = '#ffffff';
     contentEl.style.color = '#000000';
-    contentEl.style.border = '2px solid #e0e0e0';
-    contentEl.style.borderRadius = '8px';
+    contentEl.style.border = '3px solid #5865f2';
+    contentEl.style.borderRadius = '12px';
+    contentEl.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.3)';
     contentEl.style.position = 'relative';
-    contentEl.style.zIndex = '9999';
+    contentEl.style.zIndex = '101';
 
     // Create title with explicit styling
-    const titleEl = contentEl.createEl('h2', { text: 'Generating Slides' });
+    const titleEl = contentEl.createEl('h2', { text: '슬라이드 생성 중' });
     titleEl.style.color = '#000000';
-    titleEl.style.fontSize = '24px';
-    titleEl.style.fontWeight = '600';
-    titleEl.style.marginBottom = '20px';
+    titleEl.style.fontSize = '28px';
+    titleEl.style.fontWeight = '700';
+    titleEl.style.marginBottom = '30px';
+    titleEl.style.marginTop = '0';
     titleEl.style.textAlign = 'center';
 
-    // Stage indicator
+    // Stage indicator with explicit styling
     const stageContainer = contentEl.createDiv({ cls: 'progress-stage-container' });
+    stageContainer.style.margin = '30px 0';
+    stageContainer.style.display = 'block';
+
     this.stageEl = stageContainer.createDiv({ cls: 'progress-stage' });
+    this.stageEl.style.display = 'flex';
+    this.stageEl.style.justifyContent = 'space-around';
+    this.stageEl.style.alignItems = 'center';
+    this.stageEl.style.gap = '15px';
+    this.stageEl.style.marginBottom = '30px';
+
     this.updateStageDisplay();
 
-    // Progress bar
+    // Progress bar with explicit styling
     const progressContainer = contentEl.createDiv({ cls: 'progress-bar-container' });
+    progressContainer.style.margin = '30px 0';
+    progressContainer.style.width = '100%';
+
     const progressBarBg = progressContainer.createDiv({ cls: 'progress-bar-bg' });
+    progressBarBg.style.width = '100%';
+    progressBarBg.style.height = '32px';
+    progressBarBg.style.backgroundColor = '#e0e0e0';
+    progressBarBg.style.borderRadius = '16px';
+    progressBarBg.style.overflow = 'hidden';
+    progressBarBg.style.border = '2px solid #d0d0d0';
+
     this.progressBarEl = progressBarBg.createDiv({ cls: 'progress-bar-fill' });
     this.progressBarEl.style.width = '0%';
+    this.progressBarEl.style.height = '100%';
+    this.progressBarEl.style.background = 'linear-gradient(90deg, #5865f2 0%, #4752c4 100%)';
+    this.progressBarEl.style.borderRadius = '16px';
+    this.progressBarEl.style.transition = 'width 0.3s ease';
 
     // Progress percentage with explicit styling
     const progressPercentEl = contentEl.createDiv({ cls: 'progress-percent' });
     progressPercentEl.textContent = '0%';
     progressPercentEl.style.color = '#000000';
-    progressPercentEl.style.fontSize = '18px';
-    progressPercentEl.style.fontWeight = '600';
+    progressPercentEl.style.fontSize = '24px';
+    progressPercentEl.style.fontWeight = '700';
     progressPercentEl.style.textAlign = 'center';
-    progressPercentEl.style.marginTop = '10px';
+    progressPercentEl.style.marginTop = '15px';
 
     // Message with explicit styling
     this.messageEl = contentEl.createDiv({ cls: 'progress-message' });
     this.messageEl.textContent = this.progressState.message;
-    this.messageEl.style.color = '#666666';
-    this.messageEl.style.fontSize = '14px';
+    this.messageEl.style.color = '#333333';
+    this.messageEl.style.fontSize = '16px';
+    this.messageEl.style.fontWeight = '500';
     this.messageEl.style.textAlign = 'center';
-    this.messageEl.style.margin = '15px 0';
-    this.messageEl.style.minHeight = '20px';
+    this.messageEl.style.margin = '20px 0';
+    this.messageEl.style.minHeight = '24px';
 
     // Slide counter (optional)
     this.slideCounterEl = contentEl.createDiv({ cls: 'progress-slide-counter' });

@@ -1,4 +1,6 @@
 import { App, TFile, TFolder, Notice } from 'obsidian';
+import * as fs from 'fs';
+import * as path from 'path';
 import {
   IFileService,
   SlideBlueprint,
@@ -63,7 +65,7 @@ export class FileService implements IFileService {
   }
 
   /**
-   * HTML 형식 생성
+   * HTML 형식 생성 (PC의 특정 폴더에 저장)
    */
   private async generateHTML(
     blueprints: SlideBlueprint[],
@@ -87,28 +89,25 @@ export class FileService implements IFileService {
     // HTML 렌더링
     const htmlContent = renderer.renderPresentation(blueprintsWithImages, title, author);
 
-    // 파일 저장 경로 결정
-    const folderPath = 'slides'; // 기본 저장 폴더
-    await this.ensureFolderExists(folderPath);
+    // PC의 특정 폴더에 저장 (Google Drive)
+    const outputFolder = '/Users/moon/Library/CloudStorage/GoogleDrive-jpmjkim23@gmail.com/내 드라이브/slides by claude';
+
+    // 폴더가 없으면 생성
+    if (!fs.existsSync(outputFolder)) {
+      fs.mkdirSync(outputFolder, { recursive: true });
+    }
 
     const fileName = config.fileName.endsWith('.html')
       ? config.fileName
       : `${config.fileName}.html`;
-    const filePath = `${folderPath}/${fileName}`;
+    const filePath = path.join(outputFolder, fileName);
 
-    // 파일 저장
-    const existingFile = this.app.vault.getAbstractFileByPath(filePath);
-    if (existingFile instanceof TFile) {
-      // 기존 파일 덮어쓰기
-      await this.app.vault.modify(existingFile, htmlContent);
-    } else {
-      // 새 파일 생성
-      await this.app.vault.create(filePath, htmlContent);
-    }
+    // 파일 저장 (Node.js fs 사용)
+    fs.writeFileSync(filePath, htmlContent, 'utf-8');
 
     // 파일 크기 계산
-    const file = this.app.vault.getAbstractFileByPath(filePath) as TFile;
-    const size = file.stat.size;
+    const stats = fs.statSync(filePath);
+    const size = stats.size;
 
     return {
       format: 'html',
@@ -236,7 +235,7 @@ export class FileService implements IFileService {
   }
 
   /**
-   * 원본 노트에 생성된 슬라이드 링크 및 프리뷰 삽입
+   * 원본 노트에 생성된 슬라이드 링크만 삽입 (간소화)
    */
   async embedInNote(
     file: TFile,
@@ -246,66 +245,21 @@ export class FileService implements IFileService {
     try {
       const content = await this.app.vault.read(file);
 
-      // 링크 섹션 생성
+      // 링크 섹션 생성 (간소화)
       let embedSection = '\n\n---\n\n## 생성된 슬라이드\n\n';
 
       outputs.forEach((output) => {
-        const link = `[[${output.filePath}|${output.fileName}]]`;
         const formatEmoji = this.getFormatEmoji(output.format);
         const sizeKB = (output.size / 1024).toFixed(2);
+        const fileUrl = `file://${output.filePath}`;
 
         embedSection += `### ${formatEmoji} ${output.fileName}\n\n`;
         embedSection += `> **파일 정보**\n`;
-        embedSection += `> - 링크: ${link}\n`;
+        embedSection += `> - 경로: [파일 열기](${fileUrl})\n`;
+        embedSection += `> - 저장 위치: \`${output.filePath}\`\n`;
         embedSection += `> - 크기: ${sizeKB} KB\n`;
         embedSection += `> - 생성: ${new Date(output.createdAt).toLocaleString('ko-KR')}\n\n`;
       });
-
-      // 슬라이드 프리뷰 섹션 추가 (blueprints가 제공된 경우)
-      if (blueprints && blueprints.length > 0) {
-        embedSection += '\n### 📋 슬라이드 프리뷰\n\n';
-
-        blueprints.forEach((blueprint, index) => {
-          // 슬라이드 번호와 제목
-          embedSection += `#### Slide ${blueprint.slideNumber}: ${blueprint.title}\n\n`;
-
-          // 레이아웃 타입 배지
-          const layoutEmoji = this.getLayoutEmoji(blueprint.layout);
-          embedSection += `> ${layoutEmoji} **Layout:** ${blueprint.layout}\n\n`;
-
-          // 콘텐츠
-          if (blueprint.content.text.length > 0) {
-            blueprint.content.text.forEach((text) => {
-              embedSection += `- ${text}\n`;
-            });
-            embedSection += '\n';
-          }
-
-          // 테이블이 있는 경우
-          if (blueprint.content.tables && blueprint.content.tables.length > 0) {
-            blueprint.content.tables.forEach((table) => {
-              embedSection += `| ${table.headers.join(' | ')} |\n`;
-              embedSection += `| ${table.headers.map(() => '---').join(' | ')} |\n`;
-              table.rows.forEach((row) => {
-                embedSection += `| ${row.join(' | ')} |\n`;
-              });
-              embedSection += '\n';
-            });
-          }
-
-          // 코드 블록이 있는 경우
-          if (blueprint.content.code && blueprint.content.code.length > 0) {
-            blueprint.content.code.forEach((codeBlock) => {
-              embedSection += `\`\`\`${codeBlock.language}\n${codeBlock.code}\n\`\`\`\n\n`;
-            });
-          }
-
-          // 구분선 (마지막 슬라이드 제외)
-          if (index < blueprints.length - 1) {
-            embedSection += '---\n\n';
-          }
-        });
-      }
 
       // 기존 섹션이 있으면 교체, 없으면 추가
       const sectionRegex = /\n\n---\n\n## 생성된 슬라이드\n\n[\s\S]*$/;
@@ -314,7 +268,7 @@ export class FileService implements IFileService {
         : content + embedSection;
 
       await this.app.vault.modify(file, newContent);
-      new Notice('원본 노트에 슬라이드가 임베드되었습니다.');
+      new Notice('원본 노트에 슬라이드 링크가 추가되었습니다.');
     } catch (error) {
       console.error('노트 임베드 중 오류:', error);
       new Notice('노트 임베드 실패. 콘솔을 확인하세요.');
