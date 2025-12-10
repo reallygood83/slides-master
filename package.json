@@ -1,6 +1,6 @@
 {
-  "name": "paper2slides-obsidian",
-  "version": "1.0.2",
+  "name": "slides-master-obsidian",
+  "version": "1.0.3",
   "description": "Transform markdown notes into professional presentation slides using AI",
   "main": "main.js",
   "scripts": {

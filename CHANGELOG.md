@@ -1,9 +1,17 @@
 # Changelog
 
-All notable changes to the Paper2Slides Obsidian Plugin will be documented in this file.
+All notable changes to the Slides Master Obsidian Plugin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.3] - 2024-12-10
+
+### Changed
+- **Plugin renamed** from "Paper2Slides" to "Slides Master"
+- Updated plugin ID from `paper2slides` to `slides-master`
+- Updated package name from `paper2slides-obsidian` to `slides-master-obsidian`
+- Updated repository references to reflect new name
 
 ## [1.0.2] - 2024-12-10
 
