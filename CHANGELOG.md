@@ -5,6 +5,25 @@ All notable changes to the Slides Master Obsidian Plugin will be documented in t
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2024-12-10
+
+### Fixed
+- **Critical UI Fix**: Fixed Progress Modal displaying as completely blank/invisible across all Obsidian themes
+- Enhanced modal visibility with explicit inline styles and aggressive CSS overrides
+- Progress Modal now displays with white background, black text, and explicit styling on all elements
+- All CSS rules now use `!important` declarations to override conflicting theme styles
+
+### Technical Details
+- Added explicit inline styles to modal container: white background, black text, border, high z-index
+- Added explicit styling to all text elements (title, percentage, message) with hard-coded colors
+- Replaced CSS variable fallbacks with hard-coded colors in all CSS rules
+- Added explicit `display` and `visibility` properties to prevent theme conflicts
+- Increased modal size and padding for better visibility (400px min-height, 30px padding)
+
+### Changed
+- Progress Modal styling now completely independent of Obsidian theme CSS variables
+- Modal is guaranteed to be visible in both light and dark themes
+
 ## [1.0.4] - 2024-12-10
 
 ### Fixed

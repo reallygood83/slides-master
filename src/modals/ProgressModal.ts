@@ -27,11 +27,23 @@ export class ProgressModal extends Modal {
   onOpen() {
     const { contentEl } = this;
 
-    // Add debugging - make sure content is visible
-    contentEl.style.minHeight = '300px';
-    contentEl.style.padding = '20px';
+    // v1.0.5 FIX: Extremely explicit styling to ensure visibility across all themes
+    contentEl.style.minHeight = '400px';
+    contentEl.style.padding = '30px';
+    contentEl.style.backgroundColor = '#ffffff';
+    contentEl.style.color = '#000000';
+    contentEl.style.border = '2px solid #e0e0e0';
+    contentEl.style.borderRadius = '8px';
+    contentEl.style.position = 'relative';
+    contentEl.style.zIndex = '9999';
 
-    contentEl.createEl('h2', { text: 'Generating Slides' });
+    // Create title with explicit styling
+    const titleEl = contentEl.createEl('h2', { text: 'Generating Slides' });
+    titleEl.style.color = '#000000';
+    titleEl.style.fontSize = '24px';
+    titleEl.style.fontWeight = '600';
+    titleEl.style.marginBottom = '20px';
+    titleEl.style.textAlign = 'center';
 
     // Stage indicator
     const stageContainer = contentEl.createDiv({ cls: 'progress-stage-container' });
@@ -44,13 +56,23 @@ export class ProgressModal extends Modal {
     this.progressBarEl = progressBarBg.createDiv({ cls: 'progress-bar-fill' });
     this.progressBarEl.style.width = '0%';
 
-    // Progress percentage
+    // Progress percentage with explicit styling
     const progressPercentEl = contentEl.createDiv({ cls: 'progress-percent' });
     progressPercentEl.textContent = '0%';
+    progressPercentEl.style.color = '#000000';
+    progressPercentEl.style.fontSize = '18px';
+    progressPercentEl.style.fontWeight = '600';
+    progressPercentEl.style.textAlign = 'center';
+    progressPercentEl.style.marginTop = '10px';
 
-    // Message
+    // Message with explicit styling
     this.messageEl = contentEl.createDiv({ cls: 'progress-message' });
     this.messageEl.textContent = this.progressState.message;
+    this.messageEl.style.color = '#666666';
+    this.messageEl.style.fontSize = '14px';
+    this.messageEl.style.textAlign = 'center';
+    this.messageEl.style.margin = '15px 0';
+    this.messageEl.style.minHeight = '20px';
 
     // Slide counter (optional)
     this.slideCounterEl = contentEl.createDiv({ cls: 'progress-slide-counter' });
@@ -157,72 +179,92 @@ export class ProgressModal extends Modal {
   private addModalStyles(contentEl: HTMLElement) {
     const styleEl = contentEl.createEl('style');
     styleEl.textContent = `
+      /* v1.0.5 FIX: More aggressive CSS with !important to override theme styles */
       .progress-stage-container {
-        margin: 20px 0;
+        margin: 20px 0 !important;
+        display: block !important;
+        visibility: visible !important;
       }
 
       .progress-stage {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 20px;
+        display: flex !important;
+        justify-content: space-around !important;
+        align-items: center !important;
+        gap: 10px !important;
+        margin-bottom: 20px !important;
+        visibility: visible !important;
       }
 
       .stage-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-        padding: 10px;
-        border-radius: 8px;
-        background-color: var(--background-secondary, #e0e0e0);
-        opacity: 0.5;
-        transition: all 0.3s;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 5px !important;
+        padding: 10px !important;
+        border-radius: 8px !important;
+        background-color: #e0e0e0 !important;
+        opacity: 0.5 !important;
+        transition: all 0.3s !important;
+        visibility: visible !important;
       }
 
       .stage-item.stage-active {
-        opacity: 1;
-        background-color: var(--interactive-accent, #5865f2);
-        color: var(--text-on-accent, #ffffff);
-        transform: scale(1.1);
+        opacity: 1 !important;
+        background-color: #5865f2 !important;
+        color: #ffffff !important;
+        transform: scale(1.1) !important;
       }
 
       .stage-item.stage-completed {
-        opacity: 0.7;
-        background-color: var(--background-modifier-success, #a0e0a0);
+        opacity: 0.7 !important;
+        background-color: #a0e0a0 !important;
       }
 
       .stage-emoji {
-        font-size: 24px;
+        font-size: 24px !important;
+        display: inline-block !important;
+        visibility: visible !important;
       }
 
       .stage-label {
-        font-size: 12px;
-        font-weight: 500;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        color: #000000 !important;
+        display: block !important;
+        visibility: visible !important;
+      }
+
+      .stage-item.stage-active .stage-label {
+        color: #ffffff !important;
       }
 
       .progress-bar-container {
-        margin: 20px 0;
+        margin: 20px 0 !important;
+        display: block !important;
+        visibility: visible !important;
       }
 
       .progress-bar-bg {
-        width: 100%;
-        height: 24px;
-        background-color: var(--background-secondary, #e0e0e0);
-        border-radius: 12px;
-        overflow: hidden;
+        width: 100% !important;
+        height: 24px !important;
+        background-color: #e0e0e0 !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        display: block !important;
+        visibility: visible !important;
       }
 
       .progress-bar-fill {
-        height: 100%;
+        height: 100% !important;
         background: linear-gradient(
           90deg,
-          var(--interactive-accent, #5865f2) 0%,
-          var(--interactive-accent-hover, #4752c4) 100%
-        );
-        border-radius: 12px;
-        transition: width 0.3s ease;
+          #5865f2 0%,
+          #4752c4 100%
+        ) !important;
+        border-radius: 12px !important;
+        transition: width 0.3s ease !important;
+        display: block !important;
+        visibility: visible !important;
       }
 
       .progress-bar-fill.progress-complete {
@@ -230,37 +272,45 @@ export class ProgressModal extends Modal {
           90deg,
           #4ade80 0%,
           #22c55e 100%
-        );
+        ) !important;
       }
 
       .progress-percent {
-        text-align: center;
-        font-size: 18px;
-        font-weight: 600;
-        margin-top: 10px;
-        color: var(--text-normal, #000000);
+        text-align: center !important;
+        font-size: 18px !important;
+        font-weight: 600 !important;
+        margin-top: 10px !important;
+        color: #000000 !important;
+        display: block !important;
+        visibility: visible !important;
       }
 
       .progress-message {
-        text-align: center;
-        margin: 15px 0;
-        font-size: 14px;
-        color: var(--text-muted, #666666);
-        min-height: 20px;
+        text-align: center !important;
+        margin: 15px 0 !important;
+        font-size: 14px !important;
+        color: #666666 !important;
+        min-height: 20px !important;
+        display: block !important;
+        visibility: visible !important;
       }
 
       .progress-slide-counter {
-        text-align: center;
-        font-size: 13px;
-        color: var(--text-muted, #666666);
-        margin-top: 10px;
+        text-align: center !important;
+        font-size: 13px !important;
+        color: #666666 !important;
+        margin-top: 10px !important;
+        display: block !important;
+        visibility: visible !important;
       }
 
       .progress-time-remaining {
-        text-align: center;
-        font-size: 13px;
-        color: var(--text-muted, #666666);
-        margin-top: 5px;
+        text-align: center !important;
+        font-size: 13px !important;
+        color: #666666 !important;
+        margin-top: 5px !important;
+        display: block !important;
+        visibility: visible !important;
       }
     `;
   }
