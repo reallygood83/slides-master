@@ -27,101 +27,165 @@ export class ProgressModal extends Modal {
   onOpen() {
     const { contentEl, modalEl } = this;
 
-    // v1.0.7 FIX: Style both modalEl and contentEl for proper visibility
-    // Modal container styling
-    modalEl.style.display = 'flex';
-    modalEl.style.alignItems = 'center';
-    modalEl.style.justifyContent = 'center';
-    modalEl.style.position = 'fixed';
-    modalEl.style.top = '0';
-    modalEl.style.left = '0';
-    modalEl.style.right = '0';
-    modalEl.style.bottom = '0';
-    modalEl.style.zIndex = '100';
-    modalEl.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    // v1.0.9 FIX: ULTRA AGGRESSIVE styling to override ANY theme
+    // Modal container styling - maximum visibility
+    modalEl.style.cssText = `
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      z-index: 999999 !important;
+      background-color: rgba(0, 0, 0, 0.8) !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+    `;
 
-    // Content area styling - make it clearly visible
-    contentEl.style.minWidth = '600px';
-    contentEl.style.minHeight = '400px';
-    contentEl.style.maxWidth = '90vw';
-    contentEl.style.padding = '40px';
-    contentEl.style.backgroundColor = '#ffffff';
-    contentEl.style.color = '#000000';
-    contentEl.style.border = '3px solid #5865f2';
-    contentEl.style.borderRadius = '12px';
-    contentEl.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.3)';
-    contentEl.style.position = 'relative';
-    contentEl.style.zIndex = '101';
+    // Content area styling - MAXIMUM visibility and contrast
+    contentEl.style.cssText = `
+      min-width: 600px !important;
+      min-height: 400px !important;
+      max-width: 90vw !important;
+      padding: 40px !important;
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      border: 5px solid #5865f2 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+      position: relative !important;
+      z-index: 1000000 !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      transform: none !important;
+      display: block !important;
+      pointer-events: auto !important;
+    `;
 
-    // Create title with explicit styling
+    // Create title with ULTRA aggressive styling
     const titleEl = contentEl.createEl('h2', { text: '슬라이드 생성 중' });
-    titleEl.style.color = '#000000';
-    titleEl.style.fontSize = '28px';
-    titleEl.style.fontWeight = '700';
-    titleEl.style.marginBottom = '30px';
-    titleEl.style.marginTop = '0';
-    titleEl.style.textAlign = 'center';
+    titleEl.style.cssText = `
+      color: #000000 !important;
+      font-size: 28px !important;
+      font-weight: 700 !important;
+      margin-bottom: 30px !important;
+      margin-top: 0 !important;
+      text-align: center !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      display: block !important;
+    `;
 
-    // Stage indicator with explicit styling
+    // Stage indicator with ULTRA aggressive styling
     const stageContainer = contentEl.createDiv({ cls: 'progress-stage-container' });
-    stageContainer.style.margin = '30px 0';
-    stageContainer.style.display = 'block';
+    stageContainer.style.cssText = `
+      margin: 30px 0 !important;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    `;
 
     this.stageEl = stageContainer.createDiv({ cls: 'progress-stage' });
-    this.stageEl.style.display = 'flex';
-    this.stageEl.style.justifyContent = 'space-around';
-    this.stageEl.style.alignItems = 'center';
-    this.stageEl.style.gap = '15px';
-    this.stageEl.style.marginBottom = '30px';
+    this.stageEl.style.cssText = `
+      display: flex !important;
+      justify-content: space-around !important;
+      align-items: center !important;
+      gap: 15px !important;
+      margin-bottom: 30px !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    `;
 
     this.updateStageDisplay();
 
-    // Progress bar with explicit styling
+    // Progress bar with ULTRA aggressive styling
     const progressContainer = contentEl.createDiv({ cls: 'progress-bar-container' });
-    progressContainer.style.margin = '30px 0';
-    progressContainer.style.width = '100%';
+    progressContainer.style.cssText = `
+      margin: 30px 0 !important;
+      width: 100% !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      display: block !important;
+    `;
 
     const progressBarBg = progressContainer.createDiv({ cls: 'progress-bar-bg' });
-    progressBarBg.style.width = '100%';
-    progressBarBg.style.height = '32px';
-    progressBarBg.style.backgroundColor = '#e0e0e0';
-    progressBarBg.style.borderRadius = '16px';
-    progressBarBg.style.overflow = 'hidden';
-    progressBarBg.style.border = '2px solid #d0d0d0';
+    progressBarBg.style.cssText = `
+      width: 100% !important;
+      height: 32px !important;
+      background-color: #e0e0e0 !important;
+      border-radius: 16px !important;
+      overflow: hidden !important;
+      border: 2px solid #d0d0d0 !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      display: block !important;
+    `;
 
     this.progressBarEl = progressBarBg.createDiv({ cls: 'progress-bar-fill' });
-    this.progressBarEl.style.width = '0%';
-    this.progressBarEl.style.height = '100%';
-    this.progressBarEl.style.background = 'linear-gradient(90deg, #5865f2 0%, #4752c4 100%)';
-    this.progressBarEl.style.borderRadius = '16px';
-    this.progressBarEl.style.transition = 'width 0.3s ease';
+    this.progressBarEl.style.cssText = `
+      width: 0% !important;
+      height: 100% !important;
+      background: linear-gradient(90deg, #5865f2 0%, #4752c4 100%) !important;
+      border-radius: 16px !important;
+      transition: width 0.3s ease !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      display: block !important;
+    `;
 
-    // Progress percentage with explicit styling
+    // Progress percentage with ULTRA aggressive styling
     const progressPercentEl = contentEl.createDiv({ cls: 'progress-percent' });
     progressPercentEl.textContent = '0%';
-    progressPercentEl.style.color = '#000000';
-    progressPercentEl.style.fontSize = '24px';
-    progressPercentEl.style.fontWeight = '700';
-    progressPercentEl.style.textAlign = 'center';
-    progressPercentEl.style.marginTop = '15px';
+    progressPercentEl.style.cssText = `
+      color: #000000 !important;
+      font-size: 24px !important;
+      font-weight: 700 !important;
+      text-align: center !important;
+      margin-top: 15px !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      display: block !important;
+    `;
 
-    // Message with explicit styling
+    // Message with ULTRA aggressive styling
     this.messageEl = contentEl.createDiv({ cls: 'progress-message' });
     this.messageEl.textContent = this.progressState.message;
-    this.messageEl.style.color = '#333333';
-    this.messageEl.style.fontSize = '16px';
-    this.messageEl.style.fontWeight = '500';
-    this.messageEl.style.textAlign = 'center';
-    this.messageEl.style.margin = '20px 0';
-    this.messageEl.style.minHeight = '24px';
+    this.messageEl.style.cssText = `
+      color: #333333 !important;
+      font-size: 16px !important;
+      font-weight: 500 !important;
+      text-align: center !important;
+      margin: 20px 0 !important;
+      min-height: 24px !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      display: block !important;
+    `;
 
-    // Slide counter (optional)
+    // Slide counter
     this.slideCounterEl = contentEl.createDiv({ cls: 'progress-slide-counter' });
-    this.slideCounterEl.style.display = 'none';
+    this.slideCounterEl.style.cssText = `
+      display: none !important;
+      text-align: center !important;
+      font-size: 13px !important;
+      color: #666666 !important;
+      margin-top: 10px !important;
+    `;
 
-    // Time remaining (optional)
+    // Time remaining
     this.timeRemainingEl = contentEl.createDiv({ cls: 'progress-time-remaining' });
-    this.timeRemainingEl.style.display = 'none';
+    this.timeRemainingEl.style.cssText = `
+      display: none !important;
+      text-align: center !important;
+      font-size: 13px !important;
+      color: #666666 !important;
+      margin-top: 5px !important;
+    `;
 
     // Add custom styling
     this.addModalStyles(contentEl);
