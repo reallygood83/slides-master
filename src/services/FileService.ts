@@ -236,9 +236,13 @@ export class FileService implements IFileService {
   }
 
   /**
-   * 원본 노트에 생성된 슬라이드 링크 삽입
+   * 원본 노트에 생성된 슬라이드 링크 및 프리뷰 삽입
    */
-  async embedInNote(file: TFile, outputs: GeneratedOutput[]): Promise<void> {
+  async embedInNote(
+    file: TFile,
+    outputs: GeneratedOutput[],
+    blueprints?: SlideBlueprint[]
+  ): Promise<void> {
     try {
       const content = await this.app.vault.read(file);
 
@@ -250,8 +254,58 @@ export class FileService implements IFileService {
         const formatEmoji = this.getFormatEmoji(output.format);
         const sizeKB = (output.size / 1024).toFixed(2);
 
-        embedSection += `- ${formatEmoji} ${link} (${sizeKB} KB) - ${new Date(output.createdAt).toLocaleString('ko-KR')}\n`;
+        embedSection += `### ${formatEmoji} ${output.fileName}\n\n`;
+        embedSection += `> **파일 정보**\n`;
+        embedSection += `> - 링크: ${link}\n`;
+        embedSection += `> - 크기: ${sizeKB} KB\n`;
+        embedSection += `> - 생성: ${new Date(output.createdAt).toLocaleString('ko-KR')}\n\n`;
       });
+
+      // 슬라이드 프리뷰 섹션 추가 (blueprints가 제공된 경우)
+      if (blueprints && blueprints.length > 0) {
+        embedSection += '\n### 📋 슬라이드 프리뷰\n\n';
+
+        blueprints.forEach((blueprint, index) => {
+          // 슬라이드 번호와 제목
+          embedSection += `#### Slide ${blueprint.slideNumber}: ${blueprint.title}\n\n`;
+
+          // 레이아웃 타입 배지
+          const layoutEmoji = this.getLayoutEmoji(blueprint.layout);
+          embedSection += `> ${layoutEmoji} **Layout:** ${blueprint.layout}\n\n`;
+
+          // 콘텐츠
+          if (blueprint.content.text.length > 0) {
+            blueprint.content.text.forEach((text) => {
+              embedSection += `- ${text}\n`;
+            });
+            embedSection += '\n';
+          }
+
+          // 테이블이 있는 경우
+          if (blueprint.content.tables && blueprint.content.tables.length > 0) {
+            blueprint.content.tables.forEach((table) => {
+              embedSection += `| ${table.headers.join(' | ')} |\n`;
+              embedSection += `| ${table.headers.map(() => '---').join(' | ')} |\n`;
+              table.rows.forEach((row) => {
+                embedSection += `| ${row.join(' | ')} |\n`;
+              });
+              embedSection += '\n';
+            });
+          }
+
+          // 코드 블록이 있는 경우
+          if (blueprint.content.code && blueprint.content.code.length > 0) {
+            blueprint.content.code.forEach((codeBlock) => {
+              embedSection += `\`\`\`${codeBlock.language}\n${codeBlock.code}\n\`\`\`\n\n`;
+            });
+          }
+
+          // 구분선 (마지막 슬라이드 제외)
+          if (index < blueprints.length - 1) {
+            embedSection += '---\n\n';
+          }
+        });
+      }
 
       // 기존 섹션이 있으면 교체, 없으면 추가
       const sectionRegex = /\n\n---\n\n## 생성된 슬라이드\n\n[\s\S]*$/;
@@ -260,12 +314,27 @@ export class FileService implements IFileService {
         : content + embedSection;
 
       await this.app.vault.modify(file, newContent);
-      new Notice('원본 노트에 슬라이드 링크가 추가되었습니다.');
+      new Notice('원본 노트에 슬라이드가 임베드되었습니다.');
     } catch (error) {
       console.error('노트 임베드 중 오류:', error);
       new Notice('노트 임베드 실패. 콘솔을 확인하세요.');
       throw error;
     }
+  }
+
+  /**
+   * 레이아웃별 이모지 반환
+   */
+  private getLayoutEmoji(layout: string): string {
+    const emojiMap: Record<string, string> = {
+      title: '🎯',
+      content: '📝',
+      'two-column': '📊',
+      'image-focus': '🖼️',
+      quote: '💬',
+      comparison: '⚖️',
+    };
+    return emojiMap[layout] || '📄';
   }
 
   /**

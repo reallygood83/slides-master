@@ -425,6 +425,6 @@ export interface IImageService {
 
 export interface IFileService {
   saveSlides(blueprints: SlideBlueprint[], images: ImageGenerationResult[], config: OutputConfig): Promise<GeneratedOutput[]>;
-  embedInNote(file: any, outputs: GeneratedOutput[]): Promise<void>;
+  embedInNote(file: any, outputs: GeneratedOutput[], blueprints?: SlideBlueprint[]): Promise<void>;
   createBackup(file: any): Promise<string>;
 }

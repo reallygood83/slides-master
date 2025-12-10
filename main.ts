@@ -454,7 +454,7 @@ export default class Paper2SlidesPlugin extends Plugin {
 
       // Embed in note if requested
       if (outputConfig.embedInNote && this.lastGeneratedFile) {
-        await this.fileService.embedInNote(this.lastGeneratedFile, outputs);
+        await this.fileService.embedInNote(this.lastGeneratedFile, outputs, blueprints);
       }
 
       this.updateProgress({
